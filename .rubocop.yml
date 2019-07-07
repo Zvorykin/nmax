@@ -1,0 +1,40 @@
+AllCops:
+  TargetRubyVersion: 2.6
+
+Style/Documentation:
+  Enabled: false
+
+Style/ClassAndModuleChildren:
+  EnforcedStyle: nested
+
+Style/StringLiterals:
+  Enabled: false
+
+Style/RaiseArgs:
+  EnforcedStyle: compact
+
+Style/MultilineBlockChain:
+  Enabled: false
+
+Style/RegexpLiteral:
+  AllowInnerSlashes: true
+
+Style/PercentLiteralDelimiters:
+  PreferredDelimiters:
+    default: []
+
+Layout/DotPosition:
+  EnforcedStyle: leading
+
+Metrics/LineLength:
+  Max: 90
+  # To make it possible to copy or click on URIs in the code, we allow lines
+  # containing a URI to be longer than Max.
+  AllowURI: true
+  URISchemes:
+    - http
+    - https
+
+Metrics/MethodLength:
+  CountComments: false
+  Max: 15
