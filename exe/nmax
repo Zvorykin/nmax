@@ -1,3 +1,18 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
 
+require "bundler/setup" # remove after gem installed
 require "nmax"
+
+integers_limit = ARGV[0]&.to_i
+
+if integers_limit.nil? || integers_limit <= 0
+  puts 'Please set valid result limit'
+  exit
+end
+
+CHAR_LIMIT = 1000
+
+max_integers = Nmax.perform(STDIN, integers_limit, CHAR_LIMIT)
+
+p max_integers
