@@ -2,7 +2,7 @@
 
 require_relative '../spec/support/fake_stream'
 
-RSpec.describe Nmax do
+RSpec.describe Nmax::MaxIntegerSearch do
   it "has a version number" do
     expect(Nmax::VERSION).not_to be nil
   end
@@ -13,14 +13,14 @@ RSpec.describe Nmax do
     let(:line_limit) { 1000 }
     let(:expected_result) { [0, 3, 5, 9, 10, 122] }
 
-    subject(:result) { described_class.perform(stream, result_limit, line_limit) }
+    subject(:result) { described_class.new(stream, result_limit, line_limit).perform }
 
     it { is_expected.to eq expected_result }
 
     context 'limit results' do
-      let(:line_limit) { 3 }
+      let(:result_limit) { 3 }
 
-      it { expect(result.size).to eq limit }
+      it { expect(result.size).to eq result_limit }
     end
 
     context 'limit line length' do

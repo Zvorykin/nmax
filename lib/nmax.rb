@@ -5,16 +5,23 @@ require "nmax/version"
 module Nmax
   INTEGER_REGEXP = /\d+/.freeze
 
-  class << self
-    def perform(stream, integers_limit = 100, char_limit = 1000)
-      max_integers = []
+  class MaxIntegerSearch
+    attr_reader :stream, :result_limit, :line_length, :max_integers
 
-      stream.each(char_limit) do |line|
+    def initialize(stream, result_limit, line_length)
+      @stream = stream
+      @result_limit = result_limit || 100
+      @line_length = line_length || 1000
+      @max_integers = []
+    end
+
+    def perform
+      stream.each(line_length) do |line|
         line_integers = string_integers(line)
 
         next if line_integers.empty?
 
-        max_integers = process_max_integers(max_integers, line_integers, integers_limit)
+        process_max_integers(line_integers)
       end
 
       max_integers
@@ -26,15 +33,17 @@ module Nmax
       string.scan(INTEGER_REGEXP).map(&:to_i)
     end
 
-    def process_max_integers(existing_integers, new_integers, limit)
-      existing_integers = existing_integers.concat(new_integers)
-                            .uniq
-                            .sort!
+    def process_max_integers(new_integers)
+      @max_integers = max_integers.concat(new_integers)
+                                  .uniq
+                                  .sort!
 
-      new_size = existing_integers.size
-      existing_integers = existing_integers.drop(new_size - limit) if new_size > limit
+      @max_integers = max_integers.drop(result_size - result_limit) \
+        if result_size > result_limit
+    end
 
-      existing_integers
+    def result_size
+      max_integers.size
     end
   end
 end
