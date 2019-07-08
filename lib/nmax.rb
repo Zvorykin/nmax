@@ -55,7 +55,12 @@ module Nmax
     end
 
     def process_max_integers(new_integers)
-      new_integers.each { |item| max_integers << item }
+      lowest_result = max_integers.first
+
+      new_integers.each do |item|
+        max_integers << item if lowest_result.nil? || item > lowest_result
+      end
+
       max_integers.uniq!
       max_integers.sort!
 
