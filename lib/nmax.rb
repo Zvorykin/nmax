@@ -16,13 +16,34 @@ module Nmax
     end
 
     def perform
+      integer_part = nil
+      found_integers = []
+
       stream.each(line_length) do |line|
-        line_integers = string_integers(line)
+        next if line == ''
+
+        string_to_search = integer_part.nil? ? line : integer_part + line
+        integer_part = nil
+
+        line_integers = string_integers(string_to_search)
 
         next if line_integers.empty?
 
-        process_max_integers(line_integers)
+        if line.end_with?(line_integers.last.to_s)
+          integer_part = line_integers.last.to_s
+          line_integers.pop
+        end
+
+        line_integers.each { |item| found_integers << item }
+
+        if found_integers.size >= result_limit
+          process_max_integers(found_integers)
+          found_integers = []
+        end
       end
+
+      found_integers << integer_part.to_i unless integer_part.nil?
+      process_max_integers(found_integers) if found_integers.any?
 
       max_integers
     end
@@ -34,12 +55,17 @@ module Nmax
     end
 
     def process_max_integers(new_integers)
-      @max_integers = max_integers.concat(new_integers)
-                                  .uniq
-                                  .sort!
+      new_integers.each { |item| max_integers << item }
+      max_integers.uniq!
+      max_integers.sort!
 
-      @max_integers = max_integers.drop(result_size - result_limit) \
-        if result_size > result_limit
+      limit_max_integers
+    end
+
+    def limit_max_integers
+      return if result_size <= result_limit
+
+      (result_size - result_limit).times { max_integers.delete_at(0) }
     end
 
     def result_size

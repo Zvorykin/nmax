@@ -2,7 +2,7 @@
 
 class FakeStream
   def initialize
-    @string = '0 3 5 asd 10.9.a 9 ё 122'
+    @string = '0 3 5 asd 10.9.a 9 ё 122 !!1000'
   end
 
   def each(limit, &block)
